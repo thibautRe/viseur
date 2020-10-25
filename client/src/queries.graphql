@@ -1,24 +1,44 @@
-query allTickets {
-  tickets {
-    id
-    details
-    author {
-      id
-      firstName
-      lastName
-      isSelf
-    }
-    votes {
-      ...SimpleTicketVote
-    }
-  }
-}
-
 fragment SimpleTicketVote on TicketVote {
   id
   voter {
     isSelf
     firstName
+  }
+}
+
+fragment SimpleTicket on Ticket {
+  id
+  details
+  author {
+    id
+    firstName
+    lastName
+    isSelf
+  }
+  votes {
+    ...SimpleTicketVote
+  }
+}
+
+# ---- QUERIES -----
+
+query homePage {
+  tickets {
+    ...SimpleTicket
+  }
+  me {
+    id
+    isSelf
+    firstName
+    lastName
+  }
+}
+
+# ---- MUTATIONS -----
+
+mutation addTicket($details: String!) {
+  addTicket(details: $details) {
+    ...SimpleTicket
   }
 }
 

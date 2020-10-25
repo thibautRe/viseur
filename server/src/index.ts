@@ -23,13 +23,13 @@ let ticketVotes: RawTicketVote[] = [
 ]
 
 // Hack due to non present authentication
-const clientAuthor = users[0]
+const me = users[0]
 
 const resolvers: Resolvers = {
   User: {
     tickets: (a) => tickets.filter((t) => t.authorId === a.id),
     votes: (a) => ticketVotes.filter((tv) => tv.voterId === a.id),
-    isSelf: (a) => clientAuthor.id === a.id,
+    isSelf: (a) => me.id === a.id,
   },
   TicketVote: {
     ticket: (tv) => {
@@ -52,28 +52,37 @@ const resolvers: Resolvers = {
     },
     votes: (t) => ticketVotes.filter((tv) => tv.ticketId === t.id),
   },
-  Query: { tickets: () => tickets, users: () => users },
+  Query: { tickets: () => tickets, users: () => users, me: () => me },
   Mutation: {
+    addTicket: (_, { details }) => {
+      const newTicket: RawTicket = {
+        id: Math.floor(Math.random() * 1000000),
+        authorId: me.id,
+        details,
+      }
+      tickets = [...tickets, newTicket]
+      return newTicket
+    },
     addVote: (_, { ticketId }) => {
       // Make sure there is not already a vote
       const hasAlreadyVoted = ticketVotes.some(
-        (tv) => tv.ticketId === ticketId && tv.voterId === clientAuthor.id
+        (tv) => tv.ticketId === ticketId && tv.voterId === me.id
       )
       if (hasAlreadyVoted) {
         throw new ApolloError('User has already voted')
       }
 
-      const newTicketVote = {
+      const newTicketVote: RawTicketVote = {
         id: Math.floor(Math.random() * 100000),
         ticketId,
-        voterId: clientAuthor.id,
+        voterId: me.id,
       }
       ticketVotes = [...ticketVotes, newTicketVote]
       return newTicketVote
     },
     removeVote: (_, { ticketId }) => {
       const ticketVote = ticketVotes.find(
-        (tv) => tv.ticketId === ticketId && tv.voterId === clientAuthor.id
+        (tv) => tv.ticketId === ticketId && tv.voterId === me.id
       )
       if (!ticketVote) throw new ApolloError('User has not voted')
 

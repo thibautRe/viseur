@@ -23,9 +23,11 @@ type TicketVote {
 type Query {
   tickets: [Ticket!]!
   users: [User!]!
+  me: User!
 }
 
 type Mutation {
+  addTicket(details: String!): Ticket!
   addVote(ticketId: Int!): TicketVote!
   removeVote(ticketId: Int!): TicketVote!
 }

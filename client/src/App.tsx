@@ -1,9 +1,11 @@
 import React from 'react'
 import { styled } from './stitches.config'
 import {
-  useAllTicketsQuery,
+  useHomePageQuery,
+  useAddTicketMutation,
   useAddVoteMutation,
   useRemoveVoteMutation,
+  SimpleTicketFragmentDoc,
   SimpleTicketVoteFragmentDoc,
 } from './__generated__/models'
 
@@ -24,6 +26,7 @@ const LikeButton = styled('button', {
   },
 })
 const List = styled('ul', {
+  padding: 0,
   listStyle: 'none',
 })
 const TicketItem = styled('li', {
@@ -47,23 +50,34 @@ const TicketTitle = styled('strong', {
   color: '$red',
 })
 const TicketAuthor = styled('em', {})
+const Textarea = styled('textarea', {
+  width: '$ticketWidth',
+  maxWidth: '100%',
+  borderWidth: 1,
+  borderStyle: 'solid',
+  borderColor: '$ticketBackground',
+  padding: '$2',
+  fontFamily: 'inherit',
+})
 
 function App() {
-  const q = useAllTicketsQuery()
+  const q = useHomePageQuery()
+
+  const me = q.data?.me
+
   const [addVote] = useAddVoteMutation({
-    optimisticResponse: ({ ticketId }) => ({
-      __typename: 'Mutation',
-      addVote: {
-        __typename: 'TicketVote',
-        ticket: { id: ticketId },
-        id: Math.floor(Math.random() * 1000),
-        voter: {
-          __typename: 'User',
-          isSelf: true,
-          firstName: '',
+    optimisticResponse: ({ ticketId }) => {
+      if (!me) throw new Error('Cannot find self user')
+      return {
+        __typename: 'Mutation',
+        addVote: {
+          __typename: 'TicketVote',
+          ticket: { id: ticketId },
+          id: Math.floor(Math.random() * 1000),
+          voter: me,
         },
-      },
-    }),
+      }
+    },
     update: (cache, { data }) => {
       if (!data) throw new Error('No return data')
       const ticketId = data.addVote.ticket.id
@@ -72,7 +86,7 @@ function App() {
       cache.modify({
         id,
         fields: {
-          votes: (votes, details) => {
+          votes: (votes) => {
             return [
               ...votes,
               cache.writeFragment({
@@ -85,18 +99,23 @@ function App() {
       })
     },
   })
+
   const [removeVote] = useRemoveVoteMutation({
-    optimisticResponse: ({ ticketId }) => ({
-      __typename: 'Mutation',
-      removeVote: {
-        __typename: 'TicketVote',
-        ticket: { __typename: 'Ticket', id: ticketId },
-        id:
-          q.data?.tickets
-            .find((t) => t.id === ticketId)
-            ?.votes.find((tv) => tv.voter.isSelf)?.id || 0,
-      },
-    }),
+    optimisticResponse: ({ ticketId }) => {
+      const vote = q.data?.tickets
+        .find((t) => t.id === ticketId)
+        ?.votes.find((tv) => tv.voter.isSelf)
+      if (!vote) throw new Error('Cannot find vote')
+
+      return {
+        __typename: 'Mutation',
+        removeVote: {
+          __typename: 'TicketVote',
+          ticket: { __typename: 'Ticket', id: ticketId },
+          id: vote.id,
+        },
+      }
+    },
     update: (cache, { data }) => {
       if (!data) throw new Error('No return data')
       const ticketId = data.removeVote.ticket.id
@@ -114,6 +133,36 @@ function App() {
               // @ts-expect-error too deep in typings here
               (v) => readField('id', v) !== data.removeVote.id
             )
+          },
+        },
+      })
+    },
+  })
+
+  const [addTicket] = useAddTicketMutation({
+    optimisticResponse: ({ details }) => {
+      if (!me) throw new Error('Cannot find self user')
+      return {
+        __typename: 'Mutation',
+        addTicket: {
+          __typename: 'Ticket',
+          id: Math.random(),
+          details,
+          author: me,
+          votes: [],
+        },
+      }
+    },
+    update: (cache, { data }) => {
+      cache.modify({
+        fields: {
+          tickets: (tickets) => {
+            const newTicket = cache.writeFragment({
+              data: data?.addTicket,
+              fragment: SimpleTicketFragmentDoc,
+              fragmentName: 'SimpleTicket',
+            })
+            return [...tickets, newTicket]
           },
         },
       })
@@ -160,6 +209,14 @@ function App() {
           </TicketItem>
         ))}
       </List>
+      <Textarea
+        onKeyPress={(e) => {
+          if (e.key === 'Enter') {
+            addTicket({ variables: { details: e.currentTarget.value } })
+            e.currentTarget.value = ''
+          }
+        }}
+      />
     </>
   )
 }
