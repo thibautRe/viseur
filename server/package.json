@@ -1,0 +1,16 @@
+{
+  "name": "server",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "concurrently yarn:start:*",
+    "start:typescript": "tsc -w --preserveWatchOutput",
+    "start:node": "nodemon dist/index.js"
+  },
+  "dependencies": {
+    "apollo-server": "^2.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6"
+  }
+}

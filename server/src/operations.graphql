@@ -1,0 +1,36 @@
+type User {
+  id: Int!
+  firstName: String!
+  lastName: String!
+  isSelf: Boolean!
+  tickets: [Ticket!]!
+  votes: [TicketVote!]!
+}
+
+type Ticket {
+  id: Int!
+  author: User!
+  details: String!
+  votes: [TicketVote!]!
+}
+
+type TicketVote {
+  id: Int!
+  ticket: Ticket!
+  voter: User!
+}
+
+type Query {
+  tickets: [Ticket!]!
+  users: [User!]!
+}
+
+type Mutation {
+  addVote(ticketId: Int!): TicketVote!
+  removeVote(ticketId: Int!): TicketVote!
+}
+
+schema {
+  query: Query
+  mutation: Mutation
+}

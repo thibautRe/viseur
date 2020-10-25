@@ -1,0 +1,30 @@
+schema: 'server/src/**/*.graphql'
+documents: 'client/src/**/*.graphql'
+generates:
+  client/src/__generated__/models.ts:
+    - typescript
+    - typescript-operations
+    - typescript-react-apollo
+  server/src/__generated__/models.ts:
+    config:
+      useIndexSignature: true
+      mappers:
+        User: ../resolverTypes#RawUser
+        TicketVote: ../resolverTypes#RawTicketVote
+        Ticket: ../resolverTypes#RawTicket
+    plugins:
+      - typescript
+      - typescript-resolvers
+  server/src/__generated__/schema.ts:
+    plugins:
+      - add:
+          placement: 'prepend'
+          content: |+
+            /* eslint:disable */
+            // This file was automatically generated and should not be edited.
+            import {gql} from 'apollo-server';
+            export default gql`
+      - schema-ast
+      - add:
+          placement: 'content'
+          content: "`;\n"

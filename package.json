@@ -1,0 +1,37 @@
+{
+  "private": true,
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "name": "graphql-codegen-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "prestart": "yarn generate",
+    "start": "concurrently yarn:start:*",
+    "start:server": "yarn server start",
+    "start:client": "yarn client start",
+    "start:generate": "graphql-codegen --watch",
+    "generate": "graphql-codegen",
+    "client": "yarn workspace client",
+    "server": "yarn workspace server"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@graphql-codegen/add": "^2.0.1",
+    "@graphql-codegen/cli": "^1.17.10",
+    "@graphql-codegen/schema-ast": "^1.17.8",
+    "@graphql-codegen/typescript": "^1.17.10",
+    "@graphql-codegen/typescript-operations": "^1.17.8",
+    "@graphql-codegen/typescript-react-apollo": "^2.0.7",
+    "@graphql-codegen/typescript-resolvers": "^1.17.10",
+    "graphql": "^15.3.0",
+    "typescript": "^4.0.3"
+  },
+  "devDependencies": {
+    "concurrently": "^5.3.0"
+  }
+}

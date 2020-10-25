@@ -1,0 +1,41 @@
+query allTickets {
+  tickets {
+    id
+    details
+    author {
+      id
+      firstName
+      lastName
+      isSelf
+    }
+    votes {
+      ...SimpleTicketVote
+    }
+  }
+}
+
+fragment SimpleTicketVote on TicketVote {
+  id
+  voter {
+    isSelf
+    firstName
+  }
+}
+
+mutation addVote($ticketId: Int!) {
+  addVote(ticketId: $ticketId) {
+    ...SimpleTicketVote
+    ticket {
+      id
+    }
+  }
+}
+
+mutation removeVote($ticketId: Int!) {
+  removeVote(ticketId: $ticketId) {
+    id
+    ticket {
+      id
+    }
+  }
+}
