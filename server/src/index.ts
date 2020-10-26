@@ -63,6 +63,17 @@ const resolvers: Resolvers = {
       tickets = [...tickets, newTicket]
       return newTicket
     },
+    removeTicket: (_, { ticketId }) => {
+      const ticket = tickets.find((t) => t.id === ticketId)
+      if (!ticket) throw new ApolloError(`Cannot find ticket ${ticketId}`)
+
+      if (ticket.authorId !== me.id) throw new ApolloError('Wrong permission')
+      tickets = tickets.filter((t) => t.id !== ticketId)
+
+      // cascade delete on ticketVotes
+      ticketVotes = ticketVotes.filter((tv) => tv.ticketId !== ticketId)
+      return ticket
+    },
     addVote: (_, { ticketId }) => {
       // Make sure there is not already a vote
       const hasAlreadyVoted = ticketVotes.some(

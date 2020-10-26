@@ -42,6 +42,12 @@ mutation addTicket($details: String!) {
   }
 }
 
+mutation removeTicket($ticketId: Int!) {
+  removeTicket(ticketId: $ticketId) {
+    id
+  }
+}
+
 mutation addVote($ticketId: Int!) {
   addVote(ticketId: $ticketId) {
     ...SimpleTicketVote

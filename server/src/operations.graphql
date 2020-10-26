@@ -28,6 +28,8 @@ type Query {
 
 type Mutation {
   addTicket(details: String!): Ticket!
+  removeTicket(ticketId: Int!): Ticket!
+
   addVote(ticketId: Int!): TicketVote!
   removeVote(ticketId: Int!): TicketVote!
 }
