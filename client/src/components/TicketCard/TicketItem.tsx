@@ -41,11 +41,8 @@ const TicketWrapper = styled('div', {
 
 interface TicketItemProps {
   details?: React.ReactNode
-  author?: {
-    isSelf?: boolean
-    firstName?: React.ReactNode
-    lastName?: React.ReactNode
-  }
+  firstName?: React.ReactNode
+  isSelf?: boolean
   votes?: Array<{
     voter: { isSelf: boolean; firstName: React.ReactNode }
   }>
@@ -55,7 +52,8 @@ interface TicketItemProps {
 }
 const TicketItem = ({
   details,
-  author = {},
+  firstName,
+  isSelf,
   votes = [],
   onAddVote = () => {},
   onRemoveVote = () => {},
@@ -65,7 +63,7 @@ const TicketItem = ({
     <TicketWrapper>
       <Stack d="v" dist="$0" css={{ mb: '$2' }}>
         <Typography.Label css={{ color: '$ticketAuthorTitle' }}>
-          {author.firstName}
+          {firstName}
         </Typography.Label>
         <Typography.H2 css={{ color: '$ticketTitle' }}>{details}</Typography.H2>
       </Stack>
@@ -86,7 +84,7 @@ const TicketItem = ({
         >
           Like
         </LikeButton>
-        {author.isSelf && (
+        {isSelf && (
           <DeleteButton onClick={() => onRemove()}>Delete</DeleteButton>
         )}
       </Stack>

@@ -182,8 +182,9 @@ const Home = () => {
           <Box as="li" key={ticket.id}>
             <TicketItem
               details={ticket.details}
+              firstName={ticket.author.firstName}
+              isSelf={ticket.author.isSelf}
               votes={ticket.votes}
-              author={ticket.author}
               onAddVote={() => addVote({ variables: { ticketId: ticket.id } })}
               onRemoveVote={() =>
                 removeVote({ variables: { ticketId: ticket.id } })
