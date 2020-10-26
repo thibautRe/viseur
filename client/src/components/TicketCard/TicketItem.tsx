@@ -40,26 +40,26 @@ const TicketWrapper = styled('div', {
 })
 
 interface TicketItemProps {
-  details: React.ReactNode
-  author: {
-    isSelf: boolean
-    firstName: React.ReactNode
-    lastName: React.ReactNode
+  details?: React.ReactNode
+  author?: {
+    isSelf?: boolean
+    firstName?: React.ReactNode
+    lastName?: React.ReactNode
   }
-  votes: Array<{
+  votes?: Array<{
     voter: { isSelf: boolean; firstName: React.ReactNode }
   }>
-  onAddVote: () => void
-  onRemoveVote: () => void
-  onRemove: () => void
+  onAddVote?: () => void
+  onRemoveVote?: () => void
+  onRemove?: () => void
 }
 const TicketItem = ({
   details,
-  author,
-  votes,
-  onAddVote,
-  onRemoveVote,
-  onRemove,
+  author = {},
+  votes = [],
+  onAddVote = () => {},
+  onRemoveVote = () => {},
+  onRemove = () => {},
 }: TicketItemProps) => {
   return (
     <TicketWrapper>

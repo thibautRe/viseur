@@ -1,6 +1,7 @@
 import React from 'react'
 import { Box } from '../components/Box'
 import Stack from '../components/Stack'
+import LoadingTicketItem from '../components/TicketCard/LoadingTicketItem'
 import TicketItem from '../components/TicketCard/TicketItem'
 import { Typography } from '../components/Typography'
 import { styled } from '../stitches.config'
@@ -16,11 +17,6 @@ import {
   Ticket,
   TicketVote,
 } from '../__generated__/models'
-
-const List = styled(Stack, {
-  p: 0,
-  listStyle: 'none',
-})
 
 const NewTicketTextarea = styled(Typography.H2, {
   width: '$ticketWidth',
@@ -175,13 +171,13 @@ const Home = () => {
     },
   })
 
-  if (q.loading) return <h1>Loading...</h1>
   if (q.error) return <h1>Error!</h1>
+  if (q.loading) return <LoadingTicketItem />
   if (!q.data) return <h1>No data</h1>
 
   return (
     <>
-      <List as="ul" d="v" css={{ mb: 0 }}>
+      <Stack as="ul" d="v" css={{ mb: 0 }}>
         {q.data.tickets.map((ticket) => (
           <Box as="li" key={ticket.id}>
             <TicketItem
@@ -198,7 +194,7 @@ const Home = () => {
             />
           </Box>
         ))}
-      </List>
+      </Stack>
       <NewTicketTextarea
         as="textarea"
         placeholder="New ticket..."

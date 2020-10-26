@@ -16,6 +16,11 @@ const allItemsExceptFirst = '& > *:not(:first-child)'
 const Stack = styled('div', {
   display: 'flex',
 
+  // Useful reset if the stack is being used as a "ul" element
+  p: 0,
+  m: 0,
+  listStyle: 'none',
+
   variants: {
     d: {
       h: { flexDirection: 'row' },
