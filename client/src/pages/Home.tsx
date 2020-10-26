@@ -2,6 +2,7 @@ import React from 'react'
 import { Box } from '../components/Box'
 import Stack from '../components/Stack'
 import TicketItem from '../components/TicketCard/TicketItem'
+import { Typography } from '../components/Typography'
 import { styled } from '../stitches.config'
 
 import {
@@ -21,17 +22,16 @@ const List = styled(Stack, {
   listStyle: 'none',
 })
 
-const NewTicketTextarea = styled('textarea', {
+const NewTicketTextarea = styled(Typography.H2, {
   width: '$ticketWidth',
   maxWidth: '100%',
   minHeight: '$ticketMinHeight',
   p: '$2',
   mt: '$2',
-  color: '$red',
+  color: '$ticketTitle',
   backgroundColor: '$ticketBackground',
   border: 'none',
   borderRadius: '$1',
-  fontWeight: 'bold',
   fontFamily: 'inherit',
   resize: 'vertical',
 
@@ -200,8 +200,9 @@ const Home = () => {
         ))}
       </List>
       <NewTicketTextarea
+        as="textarea"
         placeholder="New ticket..."
-        onKeyPress={(e) => {
+        onKeyPress={(e: React.KeyboardEvent<HTMLTextAreaElement>) => {
           if (e.key === 'Enter') {
             e.preventDefault()
             addTicket({ variables: { details: e.currentTarget.value } })
