@@ -9,7 +9,9 @@ import { css } from './stitches.config'
 css.global({
   body: {
     fontFamily: '$sansSerif',
+    boxSizing: 'border-box',
   },
+  '*, *::before, *::after': { boxSizing: 'inherit' },
 })
 
 const client = new ApolloClient({
