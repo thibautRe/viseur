@@ -1,5 +1,10 @@
 import { ApolloError, ApolloServer } from 'apollo-server'
-import { RawUser, RawTicket, RawTicketVote } from './resolverTypes'
+import {
+  RawUser,
+  RawTicket,
+  RawTicketVote,
+  RawTicketCategory,
+} from './resolverTypes'
 import { Resolvers } from './__generated__/models'
 import typeDefs from './__generated__/schema'
 
@@ -10,9 +15,9 @@ let users: RawUser[] = [
 ]
 
 let tickets: RawTicket[] = [
-  { id: 1, authorId: 1, details: 'Better planning' },
-  { id: 2, authorId: 1, details: 'Improved roadmap' },
-  { id: 3, authorId: 2, details: 'New blood' },
+  { id: 1, authorId: 1, details: 'Better planning', categoriesId: [1] },
+  { id: 2, authorId: 1, details: 'Improved roadmap', categoriesId: [2] },
+  { id: 3, authorId: 2, details: 'New blood', categoriesId: [3] },
 ]
 
 let ticketVotes: RawTicketVote[] = [
@@ -20,6 +25,13 @@ let ticketVotes: RawTicketVote[] = [
   { id: 2, ticketId: 3, voterId: 2 },
   { id: 3, ticketId: 1, voterId: 2 },
   { id: 4, ticketId: 3, voterId: 3 },
+]
+
+let ticketsCategories: RawTicketCategory[] = [
+  { id: 1, name: 'Loved' },
+  { id: 2, name: 'Loathed' },
+  { id: 3, name: 'Learned' },
+  { id: 4, name: 'Longed for' },
 ]
 
 // Hack due to non present authentication
@@ -51,14 +63,22 @@ const resolvers: Resolvers = {
       return author
     },
     votes: (t) => ticketVotes.filter((tv) => tv.ticketId === t.id),
+    categories: (t) =>
+      ticketsCategories.filter((tc) => t.categoriesId.includes(tc.id)),
   },
-  Query: { tickets: () => tickets, users: () => users, me: () => me },
+  Query: {
+    tickets: () => tickets,
+    categories: () => ticketsCategories,
+    users: () => users,
+    me: () => me,
+  },
   Mutation: {
     addTicket: (_, { details }) => {
       const newTicket: RawTicket = {
         id: Math.floor(Math.random() * 1000000),
         authorId: me.id,
         details,
+        categoriesId: [],
       }
       tickets = [...tickets, newTicket]
       return newTicket

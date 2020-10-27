@@ -12,6 +12,7 @@ type Ticket {
   author: User!
   details: String!
   votes: [TicketVote!]!
+  categories: [TicketCategory!]!
 }
 
 type TicketVote {
@@ -20,8 +21,14 @@ type TicketVote {
   voter: User!
 }
 
+type TicketCategory {
+  id: Int!
+  name: String!
+}
+
 type Query {
   tickets: [Ticket!]!
+  categories: [TicketCategory!]!
   users: [User!]!
   me: User!
 }
