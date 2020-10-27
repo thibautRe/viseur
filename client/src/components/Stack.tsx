@@ -32,7 +32,7 @@ const Stack = styled('div', {
 
 // Add margin to items depending on the direction
 // for each "space" keys
-spaceKeys.map((spaceKey) => {
+spaceKeys.forEach((spaceKey) => {
   Stack.compoundVariant(
     { d: 'h', dist: spaceKey },
     { [allItemsExceptFirst]: { ml: spaceKey } }
