@@ -10,6 +10,8 @@ generates:
       useIndexSignature: true
       mappers:
         User: ../resolverTypes#RawUser
+        Project: ../resolverTypes#RawProject
+        TicketCategory: ../resolverTypes#RawTicketCategory
         TicketVote: ../resolverTypes#RawTicketVote
         Ticket: ../resolverTypes#RawTicket
     plugins:

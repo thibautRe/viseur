@@ -1,9 +1,11 @@
 import { ApolloError, ApolloServer } from 'apollo-server'
+import { GraphQLDate, GraphQLDateTime } from 'graphql-scalars'
 import {
   RawUser,
   RawTicket,
   RawTicketVote,
   RawTicketCategory,
+  RawProject,
 } from './resolverTypes'
 import { Resolvers } from './__generated__/models'
 import typeDefs from './__generated__/schema'
@@ -14,10 +16,33 @@ let users: RawUser[] = [
   { id: 3, firstName: 'Cookie', lastName: 'Remy' },
 ]
 
+let projects: RawProject[] = [
+  { id: 1, name: 'Project 1', createdAt: new Date(), createdById: 1 },
+  { id: 2, name: 'Project 2', createdAt: new Date(), createdById: 3 },
+]
+
 let tickets: RawTicket[] = [
-  { id: 1, authorId: 1, details: 'Better planning', categoriesId: [1] },
-  { id: 2, authorId: 1, details: 'Improved roadmap', categoriesId: [2] },
-  { id: 3, authorId: 2, details: 'New blood', categoriesId: [3] },
+  {
+    id: 1,
+    authorId: 1,
+    details: 'Better planning',
+    categoriesId: [1],
+    projectId: 1,
+  },
+  {
+    id: 2,
+    authorId: 1,
+    details: 'Improved roadmap',
+    categoriesId: [2],
+    projectId: 1,
+  },
+  {
+    id: 3,
+    authorId: 2,
+    details: 'New blood',
+    categoriesId: [3],
+    projectId: 2,
+  },
 ]
 
 let ticketVotes: RawTicketVote[] = [
@@ -38,6 +63,8 @@ let ticketsCategories: RawTicketCategory[] = [
 const me = users[0]
 
 const resolvers: Resolvers = {
+  Date: GraphQLDate,
+  DateTime: GraphQLDateTime,
   User: {
     tickets: (a) => tickets.filter((t) => t.authorId === a.id),
     votes: (a) => ticketVotes.filter((tv) => tv.voterId === a.id),
@@ -63,12 +90,26 @@ const resolvers: Resolvers = {
       return author
     },
     votes: (t) => ticketVotes.filter((tv) => tv.ticketId === t.id),
+    project: (t) => {
+      const project = projects.find((p) => p.id === t.projectId)
+      if (!project) throw new ApolloError(`Cannot find project ${t.projectId}`)
+      return project
+    },
     categories: (t) =>
       ticketsCategories.filter((tc) => t.categoriesId.includes(tc.id)),
+  },
+  Project: {
+    createdBy: (p) => {
+      const user = users.find(({ id }) => id === p.createdById)
+      if (!user) throw new ApolloError(`Cannot find user ${p.createdById}`)
+      return user
+    },
+    tickets: (p) => tickets.filter((t) => t.projectId === p.id),
   },
   Query: {
     tickets: () => tickets,
     categories: () => ticketsCategories,
+    projects: () => projects,
     users: () => users,
     me: () => me,
   },
@@ -78,6 +119,7 @@ const resolvers: Resolvers = {
         id: Math.floor(Math.random() * 1000000),
         authorId: me.id,
         details,
+        projectId: 1,
         categoriesId: [],
       }
       tickets = [...tickets, newTicket]

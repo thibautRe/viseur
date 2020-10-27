@@ -1,3 +1,6 @@
+scalar Date
+scalar DateTime
+
 type User {
   id: Int!
   firstName: String!
@@ -11,6 +14,7 @@ type Ticket {
   id: Int!
   author: User!
   details: String!
+  project: Project!
   votes: [TicketVote!]!
   categories: [TicketCategory!]!
 }
@@ -26,10 +30,19 @@ type TicketCategory {
   name: String!
 }
 
+type Project {
+  id: Int!
+  name: String!
+  createdAt: DateTime!
+  createdBy: User!
+  tickets: [Ticket!]!
+}
+
 type Query {
   tickets: [Ticket!]!
   categories: [TicketCategory!]!
   users: [User!]!
+  projects: [Project!]!
   me: User!
 }
 

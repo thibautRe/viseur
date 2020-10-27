@@ -8,7 +8,8 @@
     "start:node": "nodemon dist/index.js"
   },
   "dependencies": {
-    "apollo-server": "^2.18.2"
+    "apollo-server": "^2.18.2",
+    "graphql-scalars": "^1.4.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.6"
