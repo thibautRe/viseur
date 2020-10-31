@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { styled } from '../../stitches.config'
+import { Box } from '../Box'
 import { ResetButton } from '../Buttons'
 import Stack from '../Stack'
 import { Typography } from '../Typography'
@@ -14,8 +15,10 @@ const LikeButton = styled(TicketCardButton, {
   borderWidth: 1,
   borderStyle: 'solid',
   borderColor: '$red',
+  color: '$red',
 
   "&[aria-pressed='true']": {
+    display: 'block',
     backgroundColor: '$red',
     color: '$redContrastColor',
   },
@@ -62,19 +65,21 @@ const TicketItem = ({
   return (
     <TicketWrapper>
       <Stack d="v" dist="$0" css={{ mb: '$2' }}>
-        <Typography.Label css={{ color: '$ticketAuthorTitle' }}>
-          {firstName}
-        </Typography.Label>
+        <Stack dist="$1" css={{ alignItems: 'center' }}>
+          <Box
+            css={{
+              width: 6,
+              height: 6,
+              borderRadius: 6,
+              backgroundColor: '$grey30',
+            }}
+          />
+          <Typography.Label css={{ color: '$ticketAuthorTitle' }}>
+            {firstName}
+          </Typography.Label>
+        </Stack>
         <Typography.H2 css={{ color: '$ticketTitle' }}>{details}</Typography.H2>
       </Stack>
-      {votes.length > 0 && (
-        <>
-          Liked by{' '}
-          {votes
-            .map((v) => (v.voter.isSelf ? 'you' : v.voter.firstName))
-            .join(', ')}
-        </>
-      )}
       <Stack>
         <LikeButton
           aria-pressed={votes.some((tv) => tv.voter.isSelf)}

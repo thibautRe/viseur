@@ -33,16 +33,27 @@ export const { styled, css } = createStyled({
       $red: '#CD006D',
       $redContrastColor: '#FFFFFF',
 
+      $grey10: 'hsl(10, 12%, 12%)',
+      $grey20: 'hsl(10, 12%, 23%)',
+      $grey30: 'hsl(10, 12%, 33%)',
+      $grey50: 'hsl(10, 5%, 55%)',
+      $grey95: 'hsl(2, 10%, 95%)',
+
       $ticketAuthorTitle: 'hsl(10, 5%, 55%)',
       $ticketTitle: 'hsl(10, 12%, 16%)',
-      $ticketBackground: '#EEE',
+      $ticketBackground: 'hsl(2, 10%, 95%)',
     },
     sizes: {
       $ticketWidth: '17rem',
       $ticketMinHeight: '7rem',
     },
     fonts: {
-      $sansSerif: 'sans-serif',
+      $sansSerif: 'VISEUR, sans-serif',
+    },
+    fontWeights: {
+      $thin: '300',
+      $normal: '400',
+      $bold: '500',
     },
     radii: {
       $1: '0.25rem',

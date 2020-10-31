@@ -9,7 +9,9 @@ import { css } from './stitches.config'
 css.global({
   body: {
     fontFamily: '$sansSerif',
+    fontWeight: '$normal',
     boxSizing: 'border-box',
+    color: '$grey20',
   },
   '*, *::before, *::after': { boxSizing: 'inherit' },
 })
