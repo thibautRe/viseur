@@ -5,7 +5,7 @@ generates:
     - typescript
     - typescript-operations
     - typescript-react-apollo
-  server/src/__generated__/models.ts:
+  server/src/__generated__/resolvers.ts:
     config:
       useIndexSignature: true
       mappers:
@@ -17,7 +17,7 @@ generates:
     plugins:
       - typescript
       - typescript-resolvers
-  server/src/__generated__/schema.ts:
+  server/src/__generated__/typedefs.ts:
     plugins:
       - add:
           placement: 'prepend'

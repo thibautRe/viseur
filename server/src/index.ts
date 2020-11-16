@@ -7,8 +7,8 @@ import {
   RawTicketCategory,
   RawProject,
 } from './resolverTypes'
-import { Resolvers } from './__generated__/models'
-import typeDefs from './__generated__/schema'
+import { Resolvers } from './__generated__/resolvers'
+import typeDefs from './__generated__/typedefs'
 
 let users: RawUser[] = [
   { id: 1, firstName: 'Jake', lastName: 'H.' },

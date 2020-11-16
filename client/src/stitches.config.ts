@@ -48,7 +48,11 @@ export const { styled, css } = createStyled({
       $ticketMinHeight: '7rem',
     },
     fonts: {
-      $sansSerif: 'VISEUR, sans-serif',
+      $sansSerif: `-apple-system, BlinkMacSystemFont,
+        "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
+        "Fira Sans", "Droid Sans", "Helvetica Neue",
+        sans-serif
+      `,
     },
     fontWeights: {
       $thin: '300',
